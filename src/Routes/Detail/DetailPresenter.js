@@ -68,6 +68,15 @@ const Overview = styled.div`
     width: 50%;
 `;
 
+const IMDb = styled.a`
+    height: 16px;
+    width: 32px;
+    display: inline-block;
+    top: 4px;
+    position: relative;
+    background-image: url(${require('../../assets/IMDb.svg')});
+`;
+
 const DetailPresenter = ({ result, loading, error }) =>
     loading ? (
         <>
@@ -101,6 +110,12 @@ const DetailPresenter = ({ result, loading, error }) =>
                             {result.genres &&
                                 result.genres.map((genre, index) => (index === result.genres.length - 1 ? genre.name : `${genre.name} / `))}
                         </Item>
+                        {result.imdb_id && (
+                            <>
+                                <Divider>•</Divider>
+                                <IMDb href={`https://www.imdb.com/title/${result.imdb_id}/`} target="_blank" />
+                            </>
+                        )}
                     </ItemContainer>
                     <Overview>{result.overview}</Overview>
                 </Data>
