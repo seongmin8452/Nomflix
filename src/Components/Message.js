@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Container = styled.div`
+    margin-top: 20px;
     width: 100vw;
     display: flex;
     justify-content: center;

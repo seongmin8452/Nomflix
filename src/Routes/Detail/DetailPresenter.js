@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import Loader from 'Components/Loader';
+import Message from '../../Components/Message';
+import MoreDetail from './MoreDetail';
 
 const Container = styled.div`
     height: calc(100vh - 50px);
@@ -53,6 +56,7 @@ const Title = styled.h3`
 
 const ItemContainer = styled.div`
     margin: 20px 0;
+    height: 16px;
 `;
 
 const Item = styled.span``;
@@ -66,15 +70,20 @@ const Overview = styled.div`
     opacity: 0.7;
     line-height: 1.5;
     width: 50%;
+    margin-bottom: 20px;
 `;
 
 const IMDb = styled.a`
     height: 16px;
     width: 32px;
     display: inline-block;
-    top: 4px;
-    position: relative;
+    top: 50px;
+    position: absolute;
     background-image: url(${require('../../assets/IMDb.svg')});
+`;
+
+const Stars = styled.span`
+    color: #f1c40f;
 `;
 
 const DetailPresenter = ({ result, loading, error }) =>
@@ -86,43 +95,92 @@ const DetailPresenter = ({ result, loading, error }) =>
             <Loader />
         </>
     ) : (
-        <Container>
-            <Helmet>
-                <title>{result.original_title ? result.original_title : result.original_name} | Nomflix</title>
-            </Helmet>
-            <BackDrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
-            <Content>
-                <Cover
-                    bgImage={
-                        result.poster_path
-                            ? `https://image.tmdb.org/t/p/original${result.poster_path}`
-                            : require('../../assets/noPosterSmall.png')
-                    }
-                />
-                <Data>
-                    <Title>{result.original_title ? result.original_title : result.original_name}</Title>
-                    <ItemContainer>
-                        <Item>{result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}</Item>
-                        <Divider>•</Divider>
-                        <Item>{result.runtime ? result.runtime : result.episode_run_time[0]} min</Item>
-                        <Divider>•</Divider>
-                        <Item>
-                            {result.genres &&
-                                result.genres.map((genre, index) => (index === result.genres.length - 1 ? genre.name : `${genre.name} / `))}
-                        </Item>
-                        {result.imdb_id && (
-                            <>
-                                <Divider>•</Divider>
-                                <IMDb href={`https://www.imdb.com/title/${result.imdb_id}/`} target="_blank" />
-                            </>
-                        )}
-                    </ItemContainer>
-                    <Overview>{result.overview}</Overview>
-                </Data>
-            </Content>
-        </Container>
+        <>
+            {result && (
+                <Container>
+                    <Helmet>
+                        <title>{result.original_title ? result.original_title : result.original_name} | Nomflix</title>
+                    </Helmet>
+                    <BackDrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
+                    <Content>
+                        <Cover
+                            bgImage={
+                                result.poster_path
+                                    ? `https://image.tmdb.org/t/p/original${result.poster_path}`
+                                    : require('../../assets/noPosterSmall.png')
+                            }
+                        />
+                        <Data>
+                            <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                            <ItemContainer>
+                                {result.release_date && (
+                                    <>
+                                        <Item>{result.release_date.substring(0, 4)}</Item>
+                                        <Divider>•</Divider>
+                                    </>
+                                )}
+                                {result.first_air_date && (
+                                    <>
+                                        <Item>{result.first_air_date.substring(0, 4)}</Item>
+                                        <Divider>•</Divider>
+                                    </>
+                                )}
+                                {result.runtime && (
+                                    <>
+                                        <Item>{`${result.runtime} min`}</Item>
+                                        <Divider>•</Divider>
+                                    </>
+                                )}
+                                {result.episode_run_time && result.episode_run_time > 0 && (
+                                    <>
+                                        <Item>{`${result.episode_run_time[0]} min`}</Item>
+                                        <Divider>•</Divider>
+                                    </>
+                                )}
+                                <Item>
+                                    {result.genres &&
+                                        result.genres.map((genre, index) =>
+                                            index === result.genres.length - 1 ? genre.name : `${genre.name} / `
+                                        )}
+                                </Item>
+                                {result.imdb_id && (
+                                    <>
+                                        <Divider>•</Divider>
+                                        <Item>
+                                            <IMDb href={`https://www.imdb.com/title/${result.imdb_id}/`} target="_blank" />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </Item>
+                                    </>
+                                )}
+                                {result.vote_average !== 0 && (
+                                    <>
+                                        <Divider>•</Divider>
+                                        <Stars role="img" aria-label="rating">
+                                            {['☆', '☆', '☆', '☆', '☆'].fill('★', 0, Math.round(result.vote_average / 2)).join(' ')}
+                                        </Stars>
+                                    </>
+                                )}
+                            </ItemContainer>
+                            <Overview>{result.overview}</Overview>
+                            {/* {<Menu>
+                                <MenuTab to={`${location.pathname}?tab=trailer`}>trailer</MenuTab>
+                                <MenuTab to={`${location.pathname}?tab=details`}>details</MenuTab>
+                                <MenuTab to={`${location.pathname}?tab=more`}>more</MenuTab>
+                            </Menu>
+                            <Menu_contents>
+                                {/*
+                                <페이지 1>
+                                <페이지 2>
+                                <페이지 3>}
+                            </Menu_contents>} */}
+                            <MoreDetail result={result} />
+                        </Data>
+                    </Content>
+                </Container>
+            )}
+            {error && <Message color="#e74c3c" text={error} />}
+        </>
     );
-
 DetailPresenter.propTypes = {
     Result: PropTypes.object,
     loading: PropTypes.bool.isRequired,
