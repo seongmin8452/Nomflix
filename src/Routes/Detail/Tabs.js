@@ -3,8 +3,8 @@ import { NavLink, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import VideoTab from './Tabs/VideoTab';
 import ProductionTab from './Tabs/ProductionTab';
-import MadeBy from './Tabs/CreatedByTab';
 import CreatedByTab from './Tabs/CreatedByTab';
+import MoreTab from './Tabs/MoreTab';
 
 const MenuContainer = styled.div`
     width: 50%;
@@ -50,7 +50,7 @@ const Tabs = withRouter(({ location, result }) => (
                 Production
             </MenuTab>
             {result.created_by && result.created_by.length > 0 && (
-                <MenuTab to={`${location.pathname}?tab=made_by`} current={location.search === '?tab=made_by'}>
+                <MenuTab to={`${location.pathname}?tab=created_by`} current={location.search === '?tab=created_by'}>
                     Created By
                 </MenuTab>
             )}
@@ -69,14 +69,14 @@ const Tabs = withRouter(({ location, result }) => (
                     <ProductionTab result={result} />
                 </MenuContent>
             )}
-            {location.search === '?tab=made_by' && (
+            {location.search === '?tab=created_by' && (
                 <MenuContent>
-                    <MadeBy result={result} />
+                    <CreatedByTab result={result} />
                 </MenuContent>
             )}
             {location.search === '?tab=more' && (
                 <MenuContent>
-                    <CreatedByTab result={result} />
+                    <MoreTab result={result} />
                 </MenuContent>
             )}
         </MenuContents>
