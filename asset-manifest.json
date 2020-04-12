@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.js": "/nomflix/static/js/main.54a61c29.chunk.js",
+    "main.js.map": "/nomflix/static/js/main.54a61c29.chunk.js.map",
+    "runtime-main.js": "/nomflix/static/js/runtime-main.181cbd9a.js",
+    "runtime-main.js.map": "/nomflix/static/js/runtime-main.181cbd9a.js.map",
+    "static/js/2.9207eb57.chunk.js": "/nomflix/static/js/2.9207eb57.chunk.js",
+    "static/js/2.9207eb57.chunk.js.map": "/nomflix/static/js/2.9207eb57.chunk.js.map",
+    "index.html": "/nomflix/index.html",
+    "precache-manifest.dbf6fe512f578dcbf4dcba795042b6ff.js": "/nomflix/precache-manifest.dbf6fe512f578dcbf4dcba795042b6ff.js",
+    "service-worker.js": "/nomflix/service-worker.js",
+    "static/js/2.9207eb57.chunk.js.LICENSE.txt": "/nomflix/static/js/2.9207eb57.chunk.js.LICENSE.txt",
+    "static/media/IMDb.svg": "/nomflix/static/media/IMDb.63115ec2.svg",
+    "static/media/Loading.gif": "/nomflix/static/media/Loading.6bc11c2e.gif",
+    "static/media/NoVideo.png": "/nomflix/static/media/NoVideo.13526e1e.png",
+    "static/media/noPosterSmall.png": "/nomflix/static/media/noPosterSmall.87a0eb6a.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.181cbd9a.js",
+    "static/js/2.9207eb57.chunk.js",
+    "static/js/main.54a61c29.chunk.js"
+  ]
+}
