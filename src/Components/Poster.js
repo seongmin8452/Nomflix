@@ -9,6 +9,7 @@ const Container = styled.div`
 
 const Image = styled.div`
     background-image: url(${(props) => props.bgUrl});
+    width: 125px;
     height: 180px;
     background-size: cover;
     border-radius: 4px;
@@ -37,6 +38,11 @@ const ImageContainer = styled.div`
     }
 `;
 
+const ImageContainerOnly = styled.div`
+    margin-bottom: 5px;
+    position: relative;
+`;
+
 const Title = styled.span`
     display: block;
     margin-bottom: 3px;
@@ -47,23 +53,34 @@ const Year = styled.span`
     color: rgba(255, 255, 255, 0.5);
 `;
 
-const Poster = ({ id, imageUrl, title, rating, year, isMovie = false }) => (
-    <Link to={isMovie ? `/movie/${id}` : `/show/${id}`}>
+const Poster = ({ id, imageUrl, title, rating, year, isMovie = false, isCollection = false, onlyImage = false }) =>
+    onlyImage ? (
         <Container>
-            <ImageContainer>
+            <ImageContainerOnly>
                 <Image bgUrl={imageUrl ? `https://image.tmdb.org/t/p/w300${imageUrl}` : require('../assets/noPosterSmall.png')} />
-                <Rating>
-                    <span role="img" aria-label="rating">
-                        ⭐
-                    </span>{' '}
-                    {rating}/10
-                </Rating>
-            </ImageContainer>
+            </ImageContainerOnly>
             <Title>{title.length > 18 ? `${title.substring(0, 15)}...` : title}</Title>
             <Year>{year && year.substring(0, 4)}</Year>
         </Container>
-    </Link>
-);
+    ) : (
+        <Link to={isCollection ? `/collection/${id}` : isMovie ? `/movie/${id}` : `/show/${id}`}>
+            <Container>
+                <ImageContainer>
+                    <Image bgUrl={imageUrl ? `https://image.tmdb.org/t/p/w300${imageUrl}` : require('../assets/noPosterSmall.png')} />
+                    {!isCollection && (
+                        <Rating>
+                            <span role="img" aria-label="rating">
+                                ⭐
+                            </span>{' '}
+                            {rating}/10
+                        </Rating>
+                    )}
+                </ImageContainer>
+                <Title>{title.length > 18 ? `${title.substring(0, 15)}...` : title}</Title>
+                <Year>{year && year.substring(0, 4)}</Year>
+            </Container>
+        </Link>
+    );
 
 PerformanceEntry.propTypes = {
     id: PropTypes.number.isRequired,

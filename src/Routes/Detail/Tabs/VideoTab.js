@@ -1,10 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const Item = styled.div`
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+`;
+
+const NoVideo = styled.div`
+    width: 100%;
+    height: 0;
+    background-image: url(${require('../../../assets/NoVideo.png')});
+    background-size: cover;
+    background-position: center center;
+    padding: 10px 10px 56.25% 10px;
+`;
+
 const VideoContainer = styled.div`
     width: 100%;
     height: auto;
     overflow-x: hidden;
+    background-image: url(${require('../../../assets/Loading.gif')});
+    background-size: cover;
+    background-position: center center;
 `;
 
 const Viewer = styled.div`
@@ -13,13 +31,13 @@ const Viewer = styled.div`
     display: flex;
 `;
 
-const Testt = styled.div`
+const WrapWrap = styled.div`
     width: 100%;
     height: auto;
     position: relative;
 `;
 
-const Test = styled.div`
+const Wrap = styled.div`
     width: 100%;
     height: 0;
     padding-bottom: 56.25%;
@@ -52,27 +70,34 @@ const VideoButton = styled.a`
     }
 `;
 
-const VideoTab = ({ result }) =>
-    result.videos.results.length === 0 ? (
-        <h1>{'No videos find :('}</h1>
-    ) : (
-        <>
-            <VideoContainer>
-                <Viewer num={`${result.videos.results.length}`}>
-                    {result.videos.results.map((video, index) => (
-                        <Testt id={`${index}`}>
-                            <Test>
-                                <Video src={`https://www.youtube.com/embed/${video.key}`} />
-                            </Test>
-                        </Testt>
+const VideoTab = ({
+    result: {
+        videos: { results: videos },
+    },
+}) => (
+    <Item>
+        {videos.length === 0 ? (
+            <NoVideo>No videos find</NoVideo>
+        ) : (
+            <>
+                <VideoContainer>
+                    <Viewer num={`${videos.length}`}>
+                        {videos.map((video, index) => (
+                            <WrapWrap id={`${index}`}>
+                                <Wrap>
+                                    <Video src={`https://www.youtube.com/embed/${video.key}`} />
+                                </Wrap>
+                            </WrapWrap>
+                        ))}
+                    </Viewer>
+                </VideoContainer>
+                <VideoButtons>
+                    {videos.map((video, index) => (
+                        <VideoButton href={`#${index}`} />
                     ))}
-                </Viewer>
-            </VideoContainer>
-            <VideoButtons>
-                {result.videos.results.map((video, index) => (
-                    <VideoButton href={`#${index}`} />
-                ))}
-            </VideoButtons>
-        </>
-    );
+                </VideoButtons>
+            </>
+        )}
+    </Item>
+);
 export default VideoTab;

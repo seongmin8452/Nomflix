@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import Loader from 'Components/Loader';
 import Message from '../../Components/Message';
-import MoreDetail from './MoreDetail';
+import Tabs from './Tabs';
+import Poster from '../../Components/Poster';
 
 const Container = styled.div`
     height: calc(100vh - 50px);
     width: 100%;
     position: relative;
     padding: 50px;
+    overflow: hidden;
 `;
 
 const BackDrop = styled.div`
@@ -46,7 +48,7 @@ const Cover = styled.div`
 `;
 
 const Data = styled.div`
-    width: 70%;
+    width: 69%;
     margin-left: 10px;
 `;
 
@@ -55,7 +57,7 @@ const Title = styled.h3`
 `;
 
 const ItemContainer = styled.div`
-    margin: 20px 0;
+    margin-top: 20px;
     height: 16px;
 `;
 
@@ -70,7 +72,7 @@ const Overview = styled.div`
     opacity: 0.7;
     line-height: 1.5;
     width: 50%;
-    margin-bottom: 20px;
+    margin: 20px 0;
 `;
 
 const IMDb = styled.a`
@@ -84,6 +86,11 @@ const IMDb = styled.a`
 
 const Stars = styled.span`
     color: #f1c40f;
+`;
+
+const Collection = styled(Link)`
+    width: 125px;
+    height: 180px;
 `;
 
 const DetailPresenter = ({ result, loading, error }) =>
@@ -125,23 +132,24 @@ const DetailPresenter = ({ result, loading, error }) =>
                                         <Divider>•</Divider>
                                     </>
                                 )}
-                                {result.runtime && (
+                                {result?.runtime > 0 ? (
                                     <>
                                         <Item>{`${result.runtime} min`}</Item>
                                         <Divider>•</Divider>
                                     </>
-                                )}
-                                {result.episode_run_time && result.episode_run_time > 0 && (
+                                ) : null}
+                                {result?.episode_run_time > 0 ? (
                                     <>
                                         <Item>{`${result.episode_run_time[0]} min`}</Item>
                                         <Divider>•</Divider>
                                     </>
-                                )}
+                                ) : null}
                                 <Item>
-                                    {result.genres &&
-                                        result.genres.map((genre, index) =>
-                                            index === result.genres.length - 1 ? genre.name : `${genre.name} / `
-                                        )}
+                                    {result.genres && result.genres.length > 0
+                                        ? result.genres.map((genre, index) =>
+                                              index === result.genres.length - 1 ? genre.name : `${genre.name} / `
+                                          )
+                                        : 'No Genres'}
                                 </Item>
                                 {result.imdb_id && (
                                     <>
@@ -162,19 +170,19 @@ const DetailPresenter = ({ result, loading, error }) =>
                                 )}
                             </ItemContainer>
                             <Overview>{result.overview}</Overview>
-                            {/* {<Menu>
-                                <MenuTab to={`${location.pathname}?tab=trailer`}>trailer</MenuTab>
-                                <MenuTab to={`${location.pathname}?tab=details`}>details</MenuTab>
-                                <MenuTab to={`${location.pathname}?tab=more`}>more</MenuTab>
-                            </Menu>
-                            <Menu_contents>
-                                {/*
-                                <페이지 1>
-                                <페이지 2>
-                                <페이지 3>}
-                            </Menu_contents>} */}
-                            <MoreDetail result={result} />
+                            <Tabs result={result} />
                         </Data>
+                        {result.belongs_to_collection && (
+                            <Collection to={`/collection/${result.belongs_to_collection.id}`}>
+                                <Poster
+                                    key={result.belongs_to_collection.id}
+                                    id={result.belongs_to_collection.id}
+                                    imageUrl={result.belongs_to_collection.poster_path}
+                                    title={result.belongs_to_collection.name}
+                                    isCollection={true}
+                                />
+                            </Collection>
+                        )}
                     </Content>
                 </Container>
             )}
